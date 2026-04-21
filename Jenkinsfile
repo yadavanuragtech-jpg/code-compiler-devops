@@ -2,13 +2,6 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
-
         stage('Build Backend Docker Image') {
             steps {
                 sh 'docker build -t compiler-backend ./backend'
