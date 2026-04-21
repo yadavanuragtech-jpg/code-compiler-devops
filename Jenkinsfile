@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/yadavanuragtech-jpg/code-compiler-devops.git'
-            }
-        }
-
         stage('Build Backend Docker Image') {
             steps {
                 sh 'docker build -t compiler-backend ./backend'
