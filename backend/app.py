@@ -1,23 +1,28 @@
-import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import subprocess
 import tempfile
-from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/')
+def home():
+    return "Backend is running"
+
 @app.route('/run', methods=['POST'])
 def run_code():
-    code = request.json['code']
+    data = request.get_json()
+    code = data.get("code", "")
 
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp:
-            temp.write(code.encode())
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".py", mode="w") as temp:
+            temp.write(code)
             temp.flush()
 
             result = subprocess.run(
-                ["python3", temp.name],
+                ["python", temp.name],
                 capture_output=True,
                 text=True,
                 timeout=5
@@ -29,9 +34,10 @@ def run_code():
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)})
-
-import os
+        return jsonify({
+            "output": "",
+            "error": str(e)
+        })
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
