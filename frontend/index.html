@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Online Code Compiler</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #editor {
+      width: 100%; height: 250px;
+      border: 2px solid black;
+      padding: 10px; font-size: 16px;
+    }
+    #output-box {
+      width: 100%; border: 2px solid green;
+      padding: 10px; height: 150px; white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔥 Multi-Language Online Code Compiler</h2>
+
+<select id="language">
+  <option value="python">Python</option>
+</select>
+
+<textarea id="editor">print("Hello Compiler!")</textarea>
+<br><br>
+
+<button onclick="runCode()">Run Code</button>
+
+<br><br>
+<h3>Output:</h3>
+<div id="output-box"></div>
+
+<script>
+function runCode() {
+  const code = document.getElementById("editor").value;
+
+  fetch("http://localhost:5000/run", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("output-box").innerText =
+      "OUTPUT:\n" + data.output + "\nERROR:\n" + data.error;
+  });
+}
+</script>
+
+</body>
+</html>
